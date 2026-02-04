@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RecoverX.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5a70e7582a16b8c1bdf8399fab6cf814fd17f027")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d88432ed9713714ec0c82f62f333f8bfd1acaafe")]
 [assembly: System.Reflection.AssemblyProductAttribute("RecoverX.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RecoverX.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
