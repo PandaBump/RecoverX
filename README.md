@@ -8,6 +8,7 @@ RecoverX is a professional-grade data recovery management system built with ASP.
 ## 🎯 Project Purpose
 
 This project showcases:
+
 - ✅ Clean Architecture with clear separation of concerns
 - ✅ Domain-Driven Design (DDD) patterns
 - ✅ CQRS with MediatR for command/query separation
@@ -79,10 +80,11 @@ RecoverX/
 ## 🚀 Core Features
 
 ### 1. File Scanning & Metadata Tracking
+
 ```csharp
 // Scan a directory and register all files
-await mediator.Send(new ScanDirectoryCommand 
-{ 
+await mediator.Send(new ScanDirectoryCommand
+{
     DirectoryPath = @"C:\Data",
     Recursive = true,
     UpdateExisting = true
@@ -90,43 +92,50 @@ await mediator.Send(new ScanDirectoryCommand
 ```
 
 **What it does:**
+
 - Recursively scans directories
 - Computes SHA-256 hashes for integrity
 - Stores metadata (size, path, timestamps) in SQL Server
 - Tracks file status (Healthy, Corrupted, Missing, Recovering)
 
 ### 2. Integrity Checking
+
 ```csharp
 // Check all tracked files for corruption/missing
-await mediator.Send(new CheckIntegrityCommand 
-{ 
-    AutoQueueRecovery = true 
+await mediator.Send(new CheckIntegrityCommand
+{
+    AutoQueueRecovery = true
 });
 ```
 
 **What it does:**
+
 - Compares database records vs. actual files
 - Detects missing files (file deleted/moved)
 - Detects corrupted files (hash mismatch)
 - Automatically queues recovery jobs
 
 ### 3. Recovery Job Queue
+
 **Background Worker** continuously processes jobs:
+
 - Fetches pending jobs (ordered by priority)
 - Attempts file restoration/repair
 - Implements retry logic with exponential backoff
 - Updates file status and logs all actions
 
 **Recovery Strategies:**
+
 - Restore from backup
 - Repair corrupted data
 - Download from authoritative source
 - Manual intervention for complex cases
 
 ### 4. Backup & Restore System
+
 ```csharp
 // Create compressed, encrypted backup
-await mediator.Send(new CreateBackupCommand 
+await mediator.Send(new CreateBackupCommand
 {
     BackupDirectory = @"C:\Backups",
     BackupType = BackupType.Full,
@@ -137,18 +146,22 @@ await mediator.Send(new CreateBackupCommand
 ```
 
 **Backup Types:**
+
 - **Full** - Complete snapshot of all file metadata
 - **Incremental** - Only changes since last backup
 - **Differential** - Changes since last full backup
 
 **Advanced Features:**
+
 - GZip compression for storage efficiency
 - AES-256 encryption for security
 - Backup integrity verification
 - Point-in-time restoration
 
 ### 5. Audit Trail
+
 Every significant event is logged:
+
 - File discoveries
 - Corruption detections
 - Recovery operations (started, completed, failed)
@@ -156,13 +169,16 @@ Every significant event is logged:
 - System errors
 
 **Queryable by:**
+
 - Severity (Debug, Info, Warning, Error, Critical)
 - Event type
 - Time range
 - Associated file/job
 
 ### 6. Dashboard & Reporting
+
 Real-time statistics:
+
 - Total files tracked
 - Health breakdown (healthy, corrupted, missing)
 - Recovery job status
@@ -172,6 +188,7 @@ Real-time statistics:
 ## 🗃️ Database Schema
 
 ### FileRecords Table
+
 ```sql
 FileRecords (
     Id UNIQUEIDENTIFIER PRIMARY KEY,
@@ -190,6 +207,7 @@ CREATE INDEX IX_FileRecords_Status_UpdatedAt ON FileRecords(Status, UpdatedAt)
 ```
 
 ### RecoveryJobs Table
+
 ```sql
 RecoveryJobs (
     Id UNIQUEIDENTIFIER PRIMARY KEY,
@@ -206,11 +224,12 @@ RecoveryJobs (
 )
 
 -- Critical index for worker efficiency
-CREATE INDEX IX_RecoveryJobs_Status_Priority_CreatedAt 
+CREATE INDEX IX_RecoveryJobs_Status_Priority_CreatedAt
     ON RecoveryJobs(Status, Priority DESC, CreatedAt)
 ```
 
 ### AuditLogs Table (Append-Only)
+
 ```sql
 AuditLogs (
     Id UNIQUEIDENTIFIER PRIMARY KEY,
@@ -230,6 +249,7 @@ CREATE INDEX IX_AuditLogs_Severity_CreatedAt ON AuditLogs(Severity, CreatedAt DE
 ```
 
 ### Backups Table
+
 ```sql
 Backups (
     Id UNIQUEIDENTIFIER PRIMARY KEY,
@@ -250,6 +270,7 @@ Backups (
 ## 📦 Technology Stack
 
 ### Backend
+
 - **Framework:** ASP.NET Core 8.0
 - **Language:** C# 12 with nullable reference types
 - **Database:** SQL Server (LocalDB for dev, SQL Server for prod)
@@ -260,11 +281,13 @@ Backups (
 - **Architecture:** MediatR for CQRS
 
 ### Frontend
+
 - **Web UI:** Razor Pages (server-side rendering)
 - **API:** Swagger/OpenAPI for documentation
 - **Styling:** Bootstrap 5 (optional, can use Tailwind)
 
 ### DevOps
+
 - **Version Control:** Git
 - **Package Manager:** NuGet
 - **Database Migrations:** EF Core Migrations
@@ -273,6 +296,7 @@ Backups (
 ## 🛠️ Setup Instructions
 
 ### Prerequisites
+
 ```bash
 - .NET 8 SDK
 - SQL Server 2019+ or SQL Server Express
@@ -283,14 +307,16 @@ Backups (
 ### Installation
 
 1. **Clone the repository**
+
 ```bash
-git clone <repository-url>
+git clone <https://github.com/PandaBump/RecoverX>
 cd RecoverX
 ```
 
 2. **Configure database connection**
 
 Edit `src/RecoverX.Api/appsettings.json`:
+
 ```json
 {
   "ConnectionStrings": {
@@ -300,6 +326,7 @@ Edit `src/RecoverX.Api/appsettings.json`:
 ```
 
 For production, use SQL Server:
+
 ```json
 {
   "ConnectionStrings": {
@@ -321,12 +348,14 @@ dotnet ef database update --startup-project ../RecoverX.Api
 ```
 
 4. **Build the solution**
+
 ```bash
 cd ../..
 dotnet build
 ```
 
 5. **Run the API**
+
 ```bash
 cd src/RecoverX.Api
 dotnet run
@@ -335,6 +364,7 @@ dotnet run
 Access Swagger UI at: `https://localhost:5001/swagger`
 
 6. **Run the Web UI** (optional, in separate terminal)
+
 ```bash
 cd src/RecoverX.Web
 dotnet run
@@ -413,12 +443,14 @@ Console.WriteLine($"Recovery Success Rate: {stats.RecoverySuccessRate:F2}%");
 ## 🧪 Testing
 
 ### Unit Tests (Future)
+
 ```bash
 cd tests/RecoverX.UnitTests
 dotnet test
 ```
 
 **Test Coverage Areas:**
+
 - Domain entity business logic
 - Value object validation
 - Command/Query handlers
@@ -426,12 +458,14 @@ dotnet test
 - File system service (with mock file system)
 
 ### Integration Tests (Future)
+
 ```bash
 cd tests/RecoverX.IntegrationTests
 dotnet test
 ```
 
 **Test Scenarios:**
+
 - End-to-end recovery workflows
 - Database transactions
 - Background worker behavior
@@ -439,26 +473,20 @@ dotnet test
 
 ## 🎓 Learning Highlights
 
-### For Interview Discussion
+> I used async/await extensively. For example, the RecoveryWorker is a BackgroundService that continuously processes jobs asynchronously. File I/O operations like hash computation use FileStream with async: true for OS-level async I/O. The CQRS handlers all return Task<T> and await database operations."
 
-**"Tell me about the async patterns in your project"**
-> "I use async/await extensively. For example, the RecoveryWorker is a BackgroundService that continuously processes jobs asynchronously. File I/O operations like hash computation use FileStream with async: true for OS-level async I/O. The CQRS handlers all return Task<T> and await database operations."
+> I implemented the Unit of Work pattern. All repositories share a DbContext instance. For complex operations, I use BeginTransactionAsync() explicitly, like in the CreateBackupCommand where I need to ensure backup metadata and audit logs are atomic.
 
-**"How do you handle transactions?"**
-> "I implement the Unit of Work pattern. All repositories share a DbContext instance. For complex operations, I use BeginTransactionAsync() explicitly, like in the CreateBackupCommand where I need to ensure backup metadata and audit logs are atomic."
+> The application follows constructor injection. RecoveryWorker is interesting - it's a singleton service but needs scoped repositories, so I inject IServiceProvider and create scopes manually in ExecuteAsync using CreateScope()."
 
-**"Explain your use of dependency injection"**
-> "The application follows constructor injection. RecoveryWorker is interesting - it's a singleton service but needs scoped repositories, so I inject IServiceProvider and create scopes manually in ExecuteAsync using CreateScope()."
+> "Multiple layers ensure data integrity: SHA-256 hashes for file integrity, database transactions for atomic updates, optimistic concurrency with UpdatedAt timestamps, and comprehensive audit logging for traceability."
 
-**"How do you ensure data integrity?"**
-> "Multiple layers: SHA-256 hashes for file integrity, database transactions for atomic updates, optimistic concurrency with UpdatedAt timestamps, and comprehensive audit logging for traceability."
-
-**"What about scalability?"**
-> "The background worker can be scaled horizontally with distributed queuing (like Hangfire or Azure Service Bus). Database indexes are optimized for common queries. The CQRS pattern allows read/write separation for future read replicas."
+> The background worker can be scaled horizontally with distributed queuing (like Hangfire or Azure Service Bus). Database indexes are optimized for common queries. The CQRS pattern allows read/write separation for future read replicas.
 
 ## 🔧 Configuration
 
 ### appsettings.json
+
 ```json
 {
   "ConnectionStrings": {
@@ -468,9 +496,9 @@ dotnet test
     "MinimumLevel": "Information",
     "WriteTo": [
       { "Name": "Console" },
-      { 
+      {
         "Name": "File",
-        "Args": { 
+        "Args": {
           "path": "Logs/recoverx-.log",
           "rollingInterval": "Day"
         }
@@ -491,24 +519,28 @@ dotnet test
 ## 📊 Performance Considerations
 
 ### Database Optimization
+
 - **Indexes:** Strategic indexes on foreign keys and query fields
 - **Projections:** DTOs use Select() to load only needed columns
 - **AsNoTracking():** Read-only queries don't track changes
 - **Batch Operations:** UpdateRangeAsync for bulk updates
 
 ### File I/O Optimization
+
 - **Streaming:** Large files use FileStream, not ReadAllBytes
 - **Async I/O:** All file operations are async
 - **Buffer Size:** 4KB buffer for optimal throughput
 
 ### Memory Management
+
 - **Scoped Services:** DbContext per request/worker cycle
 - **Using Statements:** IDisposable pattern throughout
 - **Lazy Loading:** Disabled, use explicit Include()
 
 ## 🚀 Deployment
 
-### Production Checklist
+### Production Roadmap (Near-Future)
+
 - [ ] Update connection string to production SQL Server
 - [ ] Enable HTTPS with valid certificate
 - [ ] Set up Serilog to Azure Application Insights / ELK
@@ -521,6 +553,7 @@ dotnet test
 - [ ] Review and harden security settings
 
 ### Docker Deployment (Optional)
+
 ```dockerfile
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app

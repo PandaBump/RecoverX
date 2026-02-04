@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
+/*using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using RecoverX.Application.Commands;
 using RecoverX.Application.Queries;
-using RecoverX.Domain.Entities;
+using RecoverX.Domain.Entities;*/
 
 namespace RecoverX.Api.Controllers;
 

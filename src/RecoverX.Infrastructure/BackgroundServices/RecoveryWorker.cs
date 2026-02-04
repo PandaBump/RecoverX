@@ -1,6 +1,6 @@
-using Microsoft.Extensions.DependencyInjection;
+/*using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;*/
 using RecoverX.Application.Interfaces;
 using RecoverX.Domain.Entities;
 
@@ -230,7 +230,7 @@ public class RecoveryWorker : BackgroundService
         // Find most recent backup
         var backup = await unitOfWork.Backups.GetMostRecentAsync(stoppingToken);
 
-        if (backup == null)
+        if (backup is null)
         {
             _logger.LogWarning("No backups available for restoration");
             return false;
